@@ -1557,12 +1557,40 @@ function fitCanvas(c){
 }
 
 /* ----- audio ----- */
+/* ----- audio & BGM ----- */
 var audioCtx=null,suaraAktif=true;
+var bgmMenu=new Audio('bgm-menu.mp3');
+var bgmGame=new Audio('bgm-game.mp3');
+bgmMenu.loop=true;
+bgmGame.loop=true;
+bgmMenu.volume=0.55; // Volume menu 55%
+bgmGame.volume=0.22; // Volume in-game pelan (22%) agar efek suara & fokus main tetap jelas
+var bgmAktif=null;
+
+function aturBGM(jenis){
+  var target=(jenis==='game')?bgmGame:bgmMenu;
+  if(!suaraAktif){
+    bgmMenu.pause();bgmGame.pause();bgmAktif=target;
+    return;
+  }
+  if(bgmAktif&&bgmAktif!==target){
+    bgmAktif.pause();
+    bgmAktif.currentTime=0;
+  }
+  bgmAktif=target;
+  if(target.paused){
+    target.play().catch(function(){});
+  }
+}
+
 function initAudio(){
   try{
     if(!audioCtx){var C=window.AudioContext||window.webkitAudioContext;if(C)audioCtx=new C();}
     if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
   }catch(e){}
+  if(suaraAktif&&bgmAktif&&bgmAktif.paused){
+    bgmAktif.play().catch(function(){});
+  }
 }
 function nada(f,t0,dur,tipe,vol){
   var o=audioCtx.createOscillator(),g=audioCtx.createGain();
@@ -1576,10 +1604,17 @@ function sSalah(){if(!suaraAktif||!audioCtx)return;try{var t=audioCtx.currentTim
 function sKlik(){if(!suaraAktif||!audioCtx)return;try{nada(1900,audioCtx.currentTime,.025,'square',.07);}catch(e){}}
 
 function toggleSuara(){
-  initAudio();suaraAktif=!suaraAktif;
+  suaraAktif=!suaraAktif;
   $('btn-suara').textContent='Suara: '+(suaraAktif?'ON':'OFF');
   $('btn-suara-wel').textContent=suaraAktif?'🔊':'🔇';
-  sPop();
+  if(suaraAktif){
+    initAudio();
+    aturBGM(modeAktif?'game':'menu');
+    sPop();
+  }else{
+    bgmMenu.pause();
+    bgmGame.pause();
+  }
 }
 $('btn-suara').addEventListener('click',toggleSuara);
 $('btn-suara-wel').addEventListener('click',toggleSuara);
@@ -2699,6 +2734,8 @@ function tampilkanHalaman(halaman){
   $('hdr').classList.toggle('on',pakaiHdrGlobal);
   $('statusbar').classList.toggle('on',mainkan);
   modeAktif=mainkan?halaman:null;
+  aturBGM(mainkan?'game':'menu');
+  perbaruiBadge();
   perbaruiBadge();
   if(halaman==='start')setNuki('bingung','Pilih satu mode misi di samping untuk mulai!');
 }
@@ -2709,6 +2746,7 @@ function mulaiMode(m){
   initAudio();sPop();bersihkanTunda();sembunyiTimer();stopBan();petaC.token++;
   resetStatus();pakaiWaktu=$('opt-waktu').checked;
   modeAktif=m;
+  aturBGM('game');
   var layar=['A','B','C','D'];
   ['welcome','start','konsep','materi','tentang','evaluasi'].concat(layar).forEach(function(h){$('s-'+h).classList.toggle('on',h===m);});
   $('hdr').classList.add('on');$('statusbar').classList.add('on');
@@ -2735,6 +2773,11 @@ window.addEventListener('resize',function(){
 /* init */
 gambarPetaMateri();
 perbaruiBadge();
+/* init */
+gambarPetaMateri();
+perbaruiBadge();
+aturBGM('menu');
+document.addEventListener('pointerdown',function(){initAudio();},{once:true});
 </script>
 </body>
 </html>
