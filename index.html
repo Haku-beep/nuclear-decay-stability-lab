@@ -1610,10 +1610,10 @@ function skorTerbaik(){return baca(K_BEST,0);}
    Penghapusan background putih bersih + 3 Funfact Fisika Inti di Beranda
    ===================================================================== */
 var NUKI_FILES={
-  semangat:'excited.jpg',
-  senang:'excited.jpg',
-  bingung:'bingung.jpg',
-  panik:'grogi.jpg'
+  semangat:'excited.png',
+  senang:'excited.png',
+  bingung:'bingung.png',
+  panik:'grogi.png'
 };
 var NUKI_CACHE={};
 var NUKI_URUTAN=['semangat','bingung','panik'];
@@ -1721,10 +1721,10 @@ function prosesTransparan(file){
   img.src=file;
 }
 
-['excited.jpg','bingung.jpg','grogi.jpg'].forEach(prosesTransparan);
+['excited.png','bingung.png','grogi.png'].forEach(prosesTransparan);
 
 function renderSemuaNuki(expr,anim){
-  var file=NUKI_FILES[expr]||'excited.jpg';
+  var file=NUKI_FILES[expr]||'excited.png';
   var src=NUKI_CACHE[file];
   document.querySelectorAll('.nuki-slot').forEach(function(slot){
     if(src==='FALLBACK'){
