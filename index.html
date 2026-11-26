@@ -799,12 +799,40 @@ tr.beda{background:#FFE8E8}
 .lencana-lingkar.dapat{background:var(--kuning);opacity:1}
 .kunci-info{display:none;background:#FFE8E8;border:2px solid #35295E;border-radius:12px;padding:5px 10px;font-size:.78rem;font-weight:700}
 
-@media print{
-  body{background:#fff}
-  #hdr,#statusbar,#stage,.modal:not(#m-sertifikat){display:none!important}
-  #m-sertifikat{position:static;display:block!important;background:none;padding:0}
-  .sert{box-shadow:none;max-height:none}
-  .no-print{display:none!important}
+@media print {
+  @page {
+    margin: 10mm;
+  }
+  html, body, #app, #stage {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  #hdr, #statusbar, #stage, .modal:not(#m-sertifikat), .no-print {
+    display: none !important;
+  }
+  #m-sertifikat {
+    display: flex !important;
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+  }
+  .sert {
+    box-shadow: none !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    padding: 12px 18px !important;
+    gap: 6px !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
 }
 @media(prefers-reduced-motion:reduce){
   .belt-lantai,.nuki-slot,.shake-anim{animation:none!important}
