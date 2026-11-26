@@ -721,7 +721,8 @@ fieldset input{width:20px;height:20px;accent-color:#6C4CE6;flex-shrink:0}
 #cv-rantai-wrap{flex:1;min-height:90px;border:3px solid #35295E;border-radius:14px;background:#FFFDF4;box-shadow:0 3px 0 #35295E;overflow:hidden;position:relative}
 
 /* Mode D */
-.d-panel{display:flex;flex-direction:column;gap:8px;padding:12px 14px;flex:1;min-height:0;overflow:hidden;background:#FFFDF4;color:var(--tinta)}
+/* Mode D */
+.d-panel{display:flex;flex-direction:column;gap:8px;padding:12px 14px;flex:1;min-height:0;overflow-y:auto;scroll-behavior:smooth;background:#FFFDF4;color:var(--tinta)}
 .slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:#fff;border:3px solid #35295E;border-radius:10px;outline:none;touch-action:none;margin:2px 0;flex:0 0 auto}
 .slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--oranye);border:3px solid #35295E;box-shadow:0 3px 0 #35295E;cursor:grab}
 .slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--oranye);border:3px solid #35295E;box-shadow:0 3px 0 #35295E;cursor:grab}
@@ -2103,6 +2104,7 @@ function pasangKartu(c){
     function pindah(ev){
       if(!gerak&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>6){
         gerak=true;hantu=c.el.cloneNode(true);hantu.classList.add('ghost');hantu.classList.remove('pilih');
+        hantu.style.transform='translate(-50%,-50%)';
         document.body.appendChild(hantu);c.el.classList.add('pegang');
       }
       if(hantu){
@@ -2357,9 +2359,9 @@ function muatMisi(i){
   $('d-m-data').innerHTML='<div class="az"><span>'+Math.round(m.tHalf)+'</span><span>?</span></div><div class="sim">'+m.isotop.split('-')[0]+'</div><div class="info"><span>t<sub>1/2</sub> '+fmtAngka(m.tHalf)+' '+m.satuan+'</span><span>Sisa <b>'+fmtAngka(m.sisa*100)+'%</b></span></div>';
   $('d-slider').value=0;$('d-slider').disabled=false;
   $('d-fb').classList.remove('on');$('d-kunci').textContent='Kunci Tebakan';
+  $('d-misi').scrollTop=0;
   nomorSoal=i+1;perbaruiStatus();
   bacaFosil();requestAnimationFrame(gambarFosil);
-  setNuki('bingung','Geser penanda sampai kurva menyentuh garis sisa. Lalu kunci tebakanmu.');
 }
 function bacaFosil(){
   var m=KONTEN.misi[mD.i],t=tMisi(m,+$('d-slider').value),f=Math.pow(.5,t/m.tHalf);
@@ -2408,6 +2410,7 @@ $('d-kunci').addEventListener('click',function(){
     $('d-kunci').textContent=(mD.i<KONTEN.misi.length-1)?'Misi Berikutnya':'Lanjut ke Tebak Dadu';
     gambarFosil();
     setNuki(benar?'senang':'panik',benar?'Tepat. Kurva dan garis sisa bertemu di sekitar jawabanmu.':'Belum pas. Jawaban yang benar ditandai titik hijau pada kurva.');
+    $('d-misi').scrollTop=$('d-misi').scrollHeight;
   }else{
     if(mD.i<KONTEN.misi.length-1)muatMisi(mD.i+1);else muatDadu();
   }
